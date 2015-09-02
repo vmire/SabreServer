@@ -1,0 +1,15 @@
+<?
+$baseUri = '/sabre/server.php';
+$adminUsers = ["admin"];
+
+$perUserFSDirectory = "/data/MyDAVServer/data/users";
+
+$dbUrl='mysql:dbname=sabredav;host=mysqlhostname';
+$dbUser='sabredav';
+$dbPass='sabredav';
+
+$smtpHost = "mail.domain.name";
+$smtpPort = "587";
+$smtpUser = "sabre";
+$smtpPass = 'password';
+?>

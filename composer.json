@@ -1,0 +1,13 @@
+{
+	"config": {
+		"discard-changes" : true
+	},
+	"require": {
+		"sabre/dav"		: "~3.0.1",
+		"hoa/file"		: "~0.0, >=0.15.05.27",
+		"hoa/mail"		: "~0.0, >=0.15.06.03",
+		"hoa/mime"		: "~2.0",
+		"hoa/socket"	: "~0.0, >=0.15.02.25",
+		"hoa/stringbuffer"	: "~0.0"
+	}
+}
