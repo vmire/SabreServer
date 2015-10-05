@@ -89,19 +89,19 @@ class IMipPlugin extends SabreCalDav\Schedule\IMipPlugin {
 
                 switch (strtoupper($partstat)) {
                     case 'DECLINED':
-                        $subject = $senderName . ' declined your invitation to "' . $summary . '"';
+                        $subject = $senderName . ' a décliné votre invitation à "' . $summary . '"';
                         $action  = 'DECLINED';
 
                         break;
 
                     case 'ACCEPTED':
-                        $subject = $senderName . ' accepted your invitation to "' . $summary . '"';
+                        $subject = $senderName . ' a accepté votre invitation à "' . $summary . '"';
                         $action  = 'ACCEPTED';
 
                         break;
 
                     case 'TENTATIVE':
-                        $subject = $senderName . ' tentatively accepted your invitation to "' . $summary . '"';
+                        $subject = $senderName . ' a accepté provisoirement votre invitation à "' . $summary . '"';
                         $action  = 'TENTATIVE';
 
                         break;
@@ -116,13 +116,13 @@ class IMipPlugin extends SabreCalDav\Schedule\IMipPlugin {
                 break;
 
             case 'REQUEST':
-                $subject = $senderName . ' invited you to "' . $summary . '"';
+                $subject = $senderName . ' vous invite à "' . $summary . '"';
                 $action  = 'REQUEST';
 
                 break;
 
             case 'CANCEL':
-                $subject = '"' . $summary . '" has been canceled.';
+                $subject = '"' . $summary . '" a été annulé.';
                 $action  = 'CANCEL';
 
                 break;
