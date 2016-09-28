@@ -4,21 +4,15 @@ require_once 'vendor/autoload.php';
 use Sabre\DAV\Auth;
 require_once("config.php");
 require_once("lib/IMipPlugin.php");
-require_once("lib/AddressBookRoot.php");
+//require_once("lib/AddressBookRoot.php");
 require_once("lib/CalendarRoot.php");
-require_once("lib/AutoCreatePrincipalsPlugin.php");
+//require_once("lib/AutoCreatePrincipalsPlugin.php");
 
 try{
-	/**
-	 * UTC or GMT is easy to work with, and usually recommended for any
-	 * application.
-	 */
 	date_default_timezone_set('UTC');
 	
 	/**
-	 * Make sure this setting is turned on and reflect the root url for your WebDAV
-	 * server.
-	 *
+	 * Make sure this setting is turned on and reflect the root url for your WebDAV server.
 	 * This can be for example the root / or a complete path to your server script.
 	 */
 	if(!isset($baseUri)){
@@ -28,9 +22,6 @@ try{
 	
 	/**
 	 * Database
-	 *
-	 * Feel free to switch this to MySQL, it will definitely be better for higher
-	 * concurrency.
 	 */
 	$pdo = new PDO($dbUrl,$dbUser,$dbPass);
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -57,7 +48,7 @@ try{
 	 */
 	
 	$principalBackend = new \Sabre\DAVACL\PrincipalBackend\PDO($pdo);
-	$carddavBackend   = new \Sabre\CardDAV\Backend\PDO($pdo);
+	//$carddavBackend   = new \Sabre\CardDAV\Backend\PDO($pdo);
 	$caldavBackend    = new \Sabre\CalDAV\Backend\PDO($pdo);
 	
 	/**
@@ -72,7 +63,7 @@ try{
 	    // /calendars
 	    new \Mireau\CalDAV\CalendarRoot($principalBackend, $caldavBackend),
 	    // /addressbook
-	    new \Mireau\CardDAV\AddressBookRoot($principalBackend, $carddavBackend),
+	    //new \Mireau\CardDAV\AddressBookRoot($principalBackend, $carddavBackend),
 		// Per-user Directory
 		new \Sabre\DAVACL\FS\HomeCollection($principalBackend,$perUserFSDirectory),
 	];
@@ -88,7 +79,7 @@ try{
 	
 	//ACL
 	$aclPlugin = new \Sabre\DAVACL\Plugin();
-	$aclPlugin->allowAccessToNodesWithoutACL = true;
+	//$aclPlugin->allowAccessToNodesWithoutACL = true;
 	$aclPlugin->hideNodesFromListings = true;
 	foreach($adminUsers as $userId){
 		if(!$userId) continue;
@@ -100,18 +91,27 @@ try{
 	$server->addPlugin(new \Sabre\DAV\Browser\Plugin());
 	
 	//CardDAV
-	$server->addPlugin(new \Sabre\CardDAV\Plugin());
+	//$server->addPlugin(new \Sabre\CardDAV\Plugin());
 	//$server->addPlugin(new \Sabre\CardDAV\VCFExportPlugin());
 	
 	//CalDAV
 	$server->addPlugin(new \Sabre\CalDAV\Plugin());
-	$server->addPlugin(new \Sabre\DAV\Sync\Plugin());
 	$server->addPlugin(new \Sabre\CalDAV\Schedule\Plugin());
 	$server->addPlugin(new \Mireau\CalDAV\Schedule\IMipPlugin($smtpHost, $smtpPort, $smtpUser, $smtpPass));
 	//$server->addPlugin(new \Sabre\CalDAV\ICSExportPlugin());
 	
-	$server->addPlugin(new \Mireau\DAV\Auth\AutoCreatePrincipalsPlugin($principalBackend));
-	
+	//$server->addPlugin(new \Mireau\DAV\Auth\AutoCreatePrincipalsPlugin($principalBackend));
+
+	/* Calendar subscription support */
+	$server->addPlugin(new Sabre\CalDAV\Subscriptions\Plugin());
+
+	/* WebDAV-Sync plugin */
+	$server->addPlugin(new Sabre\DAV\Sync\Plugin());
+
+	/* CalDAV Sharing support */
+	$server->addPlugin(new Sabre\DAV\Sharing\Plugin());
+	$server->addPlugin(new Sabre\CalDAV\SharingPlugin());
+
 	// And off we go!
 	$server->exec();
 }
